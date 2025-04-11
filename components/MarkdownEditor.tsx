@@ -1,5 +1,6 @@
 'use client'
 
+import remarkGfm from 'remark-gfm'
 import { useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { LightAsync as SyntaxHighlighter } from 'react-syntax-highlighter'
@@ -90,6 +91,50 @@ export default function MarkdownEditor() {
 
     return (
         <div className="h-screen p-4 flex flex-col gap-4">
+            <style>
+                {`
+                    .markdown-body {
+                    font-family: ${fonts[font as keyof typeof fonts]};
+                    line-height: 1.6;
+                    }
+
+                    .markdown-body h1 {
+                    font-size: 2em;
+                    font-weight: bold;
+                    margin: 1em 0 0.5em;
+                    }
+
+                    .markdown-body h2 {
+                    font-size: 1.5em;
+                    font-weight: bold;
+                    margin: 1em 0 0.5em;
+                    }
+
+                    .markdown-body h3 {
+                    font-size: 1.25em;
+                    font-weight: bold;
+                    margin: 1em 0 0.5em;
+                    }
+
+                    .markdown-body p {
+                    margin: 0.75em 0;
+                    }
+
+                    .markdown-body code {
+                    background: #eee;
+                    padding: 0.2em 0.4em;
+                    border-radius: 4px;
+                    }
+
+                    .markdown-body pre {
+                    background: #111827;
+                    color: white;
+                    padding: 1em;
+                    border-radius: 6px;
+                    overflow: auto;
+                    }
+                `}
+            </style>
             {/* Theme + Export Controls */}
             <div className="flex items-center gap-4">
                 <div className="flex flex-col md:flex-row gap-4 items-center">
@@ -146,9 +191,10 @@ export default function MarkdownEditor() {
                 <div
                     ref={previewRef}
                     style={{ fontFamily: fonts[font as keyof typeof fonts] }}
-                    className={`w-full md:w-1/2 h-full p-4 border rounded overflow-auto max-w-none prose ${themes[theme]}`}
+                    className={`w-full md:w-1/2 h-full p-4 border rounded overflow-auto max-w-none prose markdown-body ${themes[theme]}`}
                 >
                     <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
                         children={markdown}
                         components={{
                             code({ node, inline, className, children, ...props }: any) {

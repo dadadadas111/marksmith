@@ -35,7 +35,6 @@ export default function MarkdownEditor() {
           ${fontLink ? `<link href="${fontLink}" rel="stylesheet">` : ''}
           <style>
             body {
-              padding: 2rem;
               background-color: ${theme === 'dark' ? '#111827' : '#ffffff'};
               color: ${theme === 'dark' ? '#ffffff' : '#000000'};
                 font-family: ${fonts[font as keyof typeof fonts]};
@@ -43,6 +42,22 @@ export default function MarkdownEditor() {
             .prose pre, .prose code {
               background-color: ${theme === 'dark' ? '#1f2937' : '#f5f5f5'};
               color: ${theme === 'dark' ? '#d1d5db' : '#111827'};
+            }
+            @media print {
+                body {
+                    margin: 0;
+                }
+                h1, h2, h3, p, pre, code {
+                    page-break-inside: avoid;
+                }
+                pre {
+                    white-space: pre-wrap;
+                    word-break: break-word;
+                }
+            }
+            @page {
+                margin: 2cm;
+                background: ${theme === 'dark' ? '#111827' : '#ffffff'};
             }
           </style>
         </head>

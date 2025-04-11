@@ -79,5 +79,3 @@ Marksmith is a minimal web-based tool that lets users write, style, and export M
 
 ---
 
-Let me know if you'd like mockups or to expand on any step.
-

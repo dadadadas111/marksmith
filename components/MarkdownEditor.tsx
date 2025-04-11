@@ -11,6 +11,7 @@ export default function MarkdownEditor() {
     const [markdown, setMarkdown] = useState('## Hello Marksmith!\n\nWrite some **Markdown** here.')
     const [theme, setTheme] = useState<ThemeKey>('light')
     const [font, setFont] = useState('Inter')
+    const [loading, setLoading] = useState(false)
     const previewRef = useRef<HTMLDivElement>(null)
 
     const handleExport = async () => {
@@ -51,20 +52,25 @@ export default function MarkdownEditor() {
       </html>
     `
 
-        const res = await fetch('/api/export', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ html }),
-        })
+        setLoading(true)
+        try {
+            const res = await fetch('/api/export', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ html }),
+            })
 
-        const blob = await res.blob()
-        const url = URL.createObjectURL(blob)
+            const blob = await res.blob()
+            const url = URL.createObjectURL(blob)
 
-        const link = document.createElement('a')
-        link.href = url
-        link.download = 'marksmith.pdf'
-        link.click()
-        URL.revokeObjectURL(url)
+            const link = document.createElement('a')
+            link.href = url
+            link.download = 'marksmith.pdf'
+            link.click()
+            URL.revokeObjectURL(url)
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -107,9 +113,11 @@ export default function MarkdownEditor() {
 
                 <button
                     onClick={handleExport}
-                    className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                    disabled={loading}
+                    className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:opacity-50 flex items-center gap-2"
                 >
-                    Export to PDF
+                    {loading && <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>}
+                    {loading ? 'Exporting...' : 'Export to PDF'}
                 </button>
             </div>
 
